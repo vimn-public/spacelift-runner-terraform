@@ -27,10 +27,10 @@ else
   cp /usr/state-credentials.tf .
 fi
 
-if [ -f tfvars/${TF_VAR_project_name}.${TF_VAR_environment}.tfvars ];
+if [ -f tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ];
 then
-  printf "${S_BOLD}Use Terraform variable file: "tfvars/${TF_VAR_project_name}.${TF_VAR_environment}.tfvars"...${S_NORMAL}\n"
-  cp tfvars/${TF_VAR_project_name}.${TF_VAR_environment}.tfvars ${TF_VAR_project_name}.${TF_VAR_environment}.auto.tfvars
+  printf "${S_BOLD}Use Terraform variable file: "tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars"...${S_NORMAL}\n"
+  cp tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ${TF_VAR_aws_account_name}.${TF_VAR_environment}.auto.tfvars
 fi
 
 printf "${S_BOLD}Finished Before init script.${S_NORMAL}\n"
