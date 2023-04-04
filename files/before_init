@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# AVAILABLE OPTIONS
+S_BOLD='\033[1m'
+S_NORMAL='\033[0m'
+C_RED='\033[0;31m'
+C_NONE='\033[0m' # No Color
+
+printf "${S_BOLD}Begining init script...${S_NORMAL}\n"
+
+printf "${S_BOLD}Terraform linting...${S_NORMAL}\n"
+
+terraform fmt -check
+
+if [ $? -ne 0 ];
+then
+  printf "${C_RED}Linting failed. ${C_NONE}\n"
+  printf "${C_RED}Please run '${S_BOLD}terraform fmt${S_NORMAL}' on the repository. ${C_NONE}\n"
+  exit 1
+fi
+
+if [ -f state-credentials.tf ];
+then
+  printf "${S_BOLD}Use 'state-credentials.tf' file from repository...${S_NORMAL}\n"
+else
+  printf "${S_BOLD}Generating default 'state-credentials.tf' file...${S_NORMAL}\n"
+  cp /usr/state-credentials.tf .
+fi
+
+if [ -f tfvars/${TF_VAR_project_name}.${TF_VAR_environment}.tfvars ];
+then
+  printf "${S_BOLD}Use Terraform variable file: "tfvars/${TF_VAR_project_name}.${TF_VAR_environment}.tfvars"...${S_NORMAL}\n"
+  cp tfvars/${TF_VAR_project_name}.${TF_VAR_environment}.tfvars ${TF_VAR_project_name}.${TF_VAR_environment}.auto.tfvars
+fi
+
+printf "${S_BOLD}Finished Before init script.${S_NORMAL}\n"
