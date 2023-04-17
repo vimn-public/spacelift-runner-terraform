@@ -19,15 +19,15 @@ then
   exit 1
 fi
 
-printf "Workspace root: '${TF_VAR_spacelift_workspace_root}'\n"
-printf "Project root: '${TF_VAR_spacelift_project_root}'\n"
+pwd
+ls -lah
 
-if [ -f "${TF_VAR_spacelift_workspace_root}/state-credentials.tf" ];
+if [ -f "${pwd}/state-credentials.tf" ];
 then
   printf "${S_BOLD}Use existing 'state-credentials.tf' file from repository...${S_NORMAL}\n"
 else
   printf "${S_BOLD}Generating default 'state-credentials.tf' file...${S_NORMAL}\n"
-  cp /usr/state-credentials.tf ${TF_VAR_spacelift_workspace_root}/
+  cp /usr/state-credentials.tf .
 fi
 
 if [ -f tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ];
