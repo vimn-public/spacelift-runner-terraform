@@ -19,7 +19,8 @@ then
   exit 1
 fi
 
-printf "Workspace root: ${TF_VAR_spacelift_workspace_root}\n"
+printf "Workspace root: '${TF_VAR_spacelift_workspace_root}'\n"
+printf "Project root: '${TF_VAR_spacelift_project_root}'\n"
 
 if [ -f "${TF_VAR_spacelift_workspace_root}/state-credentials.tf" ];
 then
