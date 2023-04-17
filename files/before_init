@@ -19,15 +19,13 @@ then
   exit 1
 fi
 
-pwd
-ls -lah
-
-if [ -f "${pwd}/state-credentials.tf" ];
+if [ ! -f "${pwd}/state-credentials-custom.tf" ];
 then
-  printf "${S_BOLD}Use existing 'state-credentials.tf' file from repository...${S_NORMAL}\n"
-else
   printf "${S_BOLD}Generating default 'state-credentials.tf' file...${S_NORMAL}\n"
   cp /usr/state-credentials.tf .
+else
+  printf "${S_BOLD}Use 'state-credentials-custom.tf' file from repository...${S_NORMAL}\n"
+  cp /usr/state-credentials-custom.tf state-credentials.tf
 fi
 
 if [ -f tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ];
