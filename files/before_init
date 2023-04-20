@@ -28,22 +28,39 @@ else
   cp /usr/state-credentials-custom.tf state-credentials.tf
 fi
 
-if [ -f tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ];
-then
-  printf "${S_BOLD}Using "${S_BOLD}tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
-  cp tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ${TF_VAR_aws_account_name}.${TF_VAR_environment}.auto.tfvars
-fi
+if [ -v ${TF_VAR_aws_account_name} ]; then
+  if [ -f tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ];
+  then
+    printf "${S_BOLD}Using "${S_BOLD}tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
+    cp tfvars/${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ${TF_VAR_aws_account_name}.${TF_VAR_environment}.auto.tfvars
+  fi
 
-if [ -f ${TF_VAR_aws_account_name}-${TF_VAR_environment}.tfvars ];
-then
-  printf "${S_BOLD}Using "${S_BOLD}${TF_VAR_aws_account_name}-${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
-  cp ${TF_VAR_aws_account_name}-${TF_VAR_environment}.tfvars ${TF_VAR_aws_account_name}-${TF_VAR_environment}.auto.tfvars
-fi
+  if [ -f ${TF_VAR_aws_account_name}-${TF_VAR_environment}.tfvars ];
+  then
+    printf "${S_BOLD}Using "${S_BOLD}${TF_VAR_aws_account_name}-${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
+    cp ${TF_VAR_aws_account_name}-${TF_VAR_environment}.tfvars ${TF_VAR_aws_account_name}-${TF_VAR_environment}.auto.tfvars
+  fi
 
-if [ -f ${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ];
-then
-  printf "${S_BOLD}Using "${S_BOLD}${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
-  cp ${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ${TF_VAR_aws_account_name}.${TF_VAR_environment}.auto.tfvars
+  if [ -f ${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ];
+  then
+    printf "${S_BOLD}Using "${S_BOLD}${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
+    cp ${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ${TF_VAR_aws_account_name}.${TF_VAR_environment}.auto.tfvars
+  fi
+
+# When TF_VAR_project_name is set and TF_VAR_aws_account_name length is 0
+elif [ (-v ${TF_VAR_project_name}) && (-z "${TF_VAR_aws_account_name}") ]; then
+  
+  if [ -f ${TF_VAR_project_name}-${TF_VAR_environment}.tfvars ];
+  then
+    printf "${S_BOLD}Using "${S_BOLD}${TF_VAR_project_name}-${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
+    cp ${TF_VAR_project_name}-${TF_VAR_environment}.tfvars ${TF_VAR_aws_account_name}-${TF_VAR_environment}.auto.tfvars
+  fi
+
+  if [ -f ${TF_VAR_project_name}.${TF_VAR_environment}.tfvars ];
+  then
+    printf "${S_BOLD}Using "${S_BOLD}${TF_VAR_project_name}-${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
+    cp ${TF_VAR_project_name}.${TF_VAR_environment}.tfvars ${TF_VAR_aws_account_name}.${TF_VAR_environment}.auto.tfvars
+  fi
 fi
 
 printf "${S_BOLD}Finished Before init script.${S_NORMAL}\n"
