@@ -46,4 +46,25 @@ then
   cp ${TF_VAR_aws_account_name}.${TF_VAR_environment}.tfvars ${TF_VAR_aws_account_name}.${TF_VAR_environment}.auto.tfvars
 fi
 
+# Account Type
+
+if [ -f tfvars/${TF_VAR_account_type}.${TF_VAR_environment}.tfvars ];
+then
+  printf "${S_BOLD}Using "${S_BOLD}tfvars/${TF_VAR_account_type}.${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
+  cp tfvars/${TF_VAR_account_type}.${TF_VAR_environment}.tfvars ${TF_VAR_account_type}.${TF_VAR_environment}.auto.tfvars
+fi
+
+if [ -f ${TF_VAR_account_type}-${TF_VAR_environment}.tfvars ];
+then
+  printf "${S_BOLD}Using "${S_BOLD}${TF_VAR_account_type}-${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
+  cp ${TF_VAR_account_type}-${TF_VAR_environment}.tfvars ${TF_VAR_account_type}-${TF_VAR_environment}.auto.tfvars
+fi
+
+if [ -f ${TF_VAR_account_type}.${TF_VAR_environment}.tfvars ];
+then
+  printf "${S_BOLD}Using "${S_BOLD}${TF_VAR_account_type}.${TF_VAR_environment}.tfvars${S_NORMAL}" Terraform variable file${S_NORMAL}\n"
+  cp ${TF_VAR_account_type}.${TF_VAR_environment}.tfvars ${TF_VAR_account_type}.${TF_VAR_environment}.auto.tfvars
+fi
+
+
 printf "${S_BOLD}Finished Before init script.${S_NORMAL}\n"
