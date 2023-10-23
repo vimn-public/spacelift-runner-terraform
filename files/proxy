@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -eu
+
+ssh_user="ec2-user"
+proxy_port="6699"
+
+ssh_private_key_path="$(mktemp -u)"
+>/dev/stderr echo "Generating temporary private key file ${ssh_private_key_path}."
+ssh-keygen -t rsa -N '' -f "$ssh_private_key_path"
+ssh_public_key_path="${ssh_private_key_path}.pub"
+
+# bastion_host_instance="i-0fc70279b7d37cdd6"
+bastion_host_instance="$(aws ec2 describe-instances --filters "Name=tag:bastion-host,Values=1" \
+    --query "Reservations[0].Instances[0].InstanceId" \
+    --output text)"
+
+instance_availability_zone="$(aws ec2 describe-instances \
+    --instance-id "$bastion_host_instance" \
+    --query "Reservations[0].Instances[0].Placement.AvailabilityZone" \
+    --output text)"
+
+>/dev/stderr echo "Add public key ${ssh_public_key_path} for ${ssh_user} at instance ${bastion_host_instance} for 60 seconds"
+aws ec2-instance-connect send-ssh-public-key  \
+  --instance-id "$bastion_host_instance" \
+  --instance-os-user "$ssh_user" \
+  --ssh-public-key "file://$ssh_public_key_path" \
+  --availability-zone "$instance_availability_zone" \
+  --no-cli-pager
+
+>/dev/stderr echo "Start ssm session to instance ${bastion_host_instance}"
+ssh -i $ssh_private_key_path \
+  -o IdentitiesOnly=yes \
+  -o ProxyCommand="sh -c 'aws ssm start-session --target ${bastion_host_instance} --document-name AWS-StartSSHSession --parameters portNumber=22 --region us-east-1'" \
+  -o ExitOnForwardFailure=yes \
+  -q -fCND $proxy_port $ssh_user@$bastion_host_instance
